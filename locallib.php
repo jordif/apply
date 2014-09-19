@@ -43,7 +43,8 @@ class enrol_apply_enrol_form extends moodleform {
         $plugin = enrol_get_plugin('self');
 
         $heading = $plugin->get_instance_name($instance);
-        $mform->addElement('header', 'selfheader', $heading);
+        //$mform->addElement('header', 'selfheader', $heading);
+        $mform->addElement('header', 'selfheader', "Preinscripció");
 
         if ($instance->password) {
             $heading = $plugin->get_instance_name($instance);
@@ -55,9 +56,11 @@ class enrol_apply_enrol_form extends moodleform {
             // nothing?
         }
 
-		$mform->addElement('html', '<p>'.$instance->customtext1.'</p>');
+		//$mform->addElement('html', '<p>'.$instance->customtext1.'</p>');
+        $mform->addElement('html', '<p>Només cal que facis clic al botó "Preinscriu-me". Si ho vols, també pots fer-nos arribar un comentari.</p>');
         $mform->addElement('textarea', 'applydescription', get_string('comment', 'enrol_apply'),'cols="80"');
-        $this->add_action_buttons(false, get_string('enrolme', 'enrol_self'));
+        //$this->add_action_buttons(false, get_string('enrolme', 'enrol_self'));
+        $this->add_action_buttons(false, "Preinscriu-me");
 
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);

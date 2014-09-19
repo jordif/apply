@@ -49,7 +49,11 @@ class enrol_apply_plugin extends enrol_plugin {
 		if ($DB->record_exists('user_enrolments', array('userid'=>$USER->id, 'enrolid'=>$instance->id))) {
 			//TODO: maybe we should tell them they are already enrolled, but can not access the course
 			//return null;
-			return $OUTPUT->notification(get_string('notification', 'enrol_apply'));
+			$result = $OUTPUT->notification(get_string('notification', 'enrol_apply', $USER->email), "alert alert-danger alert-enrolment");
+			$result .= "<script type='text/javascript'>
+			Y.one('#region-main').insert(Y.one('.alert-enrolment'), Y.one('#maincontent'));
+			</script>";
+			return $result;
 		}
 
 		if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > time()) {
@@ -95,6 +99,7 @@ class enrol_apply_plugin extends enrol_plugin {
 				$this->enrol_user($instance, $USER->id, $roleid, $timestart, $timeend,1);
 				sendConfirmMailToTeachers($instance->courseid, $instance->id, $data->applydescription);
 				sendConfirmMailToManagers($instance->courseid,$data->applydescription);
+				sendConfirmMailToStudent($instance->courseid,$data->applydescription);
 				
 				add_to_log($instance->courseid, 'course', 'enrol', '../enrol/users.php?id='.$instance->courseid, $instance->courseid); //there should be userid somewhere!
 				redirect("$CFG->wwwroot/course/view.php?id=$instance->courseid");
@@ -270,6 +275,28 @@ function sendConfirmMailToManagers($courseid,$desc){
 			email_to_user($info, $contact, get_string('mailtoteacher_suject', 'enrol_apply'), '', $body);
 		}
 	}
+}
+
+function sendConfirmMailToStudent($courseid,$desc){
+	global $DB;
+	global $CFG;
+	global $USER;
+
+		$course = get_course($courseid);
+
+			$body = "<p>Moltes gràcies per a confiar-nos la teva formació en el sector forestal.";
+			$body .= " T'has inscrit al curs " . format_string($course->fullname);
+			$body .= " que comença el dia " . date( 'd-m-Y', $course->startdate ) . "</p>";
+			$body .= "<p>Per a formalitzar la matrícula d'aquest curs cal que facis el pagament a través d'aquest número de compte: XXXXXXXXX </p>";
+			$body .= "<p>Un cop tinguis fet l'ingrés, fes-nos-en arribar el comprovant clicant aquí: ";
+			$body .= html_writer::link(new moodle_url('/user/edit.php?fieldset=2'), "Adjuntar documentació") . '</p>';
+			$body .= "<p>Un cop fet el pagament, necessitem que ens enviïs pel mateix sistema el full d'inscripció a l'atur o bé el certificat de situació de cotització en cas de ser autònoms, o bé la carta de l'empresa conforme pagaran el curs del seu treballador.</p>";
+
+			$contact = get_admin();
+			$info = $USER;
+			$info->coursename = $course->fullname;
+			email_to_user($info, $contact, "Preinscripció realitzada correctament", '', $body);
+
 }
 
 function getRelatedInfo($enrolid){

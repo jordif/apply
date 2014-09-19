@@ -39,7 +39,7 @@ $string['apply:manage'] = 'Gestionar la Inscripció prèvia aprovació'; // Need
 $string['apply:unenrol'] = 'Cancel·lar usuaris del curs'; // Needs more insight
 $string['apply:unenrolapply'] = 'Cancel·lar-se a si mateix del curs'; // Needs more insight. Very ugly translation!
  
-$string['notification'] = '<b>Sol·licitud d\'inscripció enviada correctament</b>. <br/><br/>Rebràs una notificació per correu electrònic un cop estigui confirmada la inscripció.';
+$string['notification'] = '<b>Preinscripció realitzada correctament</b>. <br/><br/>Rebràs una notificació al correu {$a} per tal que puguis formalitzar la teva inscripció al curs.';
 
 $string['sendmailtoteacher'] = 'Enviar notificacions per correu als professors';
 $string['sendmailtomanager'] = 'Enviar notificacions per correu als administradors';
